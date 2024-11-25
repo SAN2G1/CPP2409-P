@@ -6,7 +6,7 @@
 #include "diary.h"
 using namespace std;
 
-string getCurrentDate() { // 날짜만
+string GetCurrentDate() { // 날짜만
     time_t now = time(0);
     tm *ltm = localtime(&now);
 
@@ -15,7 +15,7 @@ string getCurrentDate() { // 날짜만
 
     return string(buffer);
 }
-string getCurrentDateTime() { // 날짜랑 시간까지
+string GetCurrentdate_time() { // 날짜랑 시간까지
     time_t now = time(0);
     tm *ltm = localtime(&now);
 
@@ -25,9 +25,9 @@ string getCurrentDateTime() { // 날짜랑 시간까지
     return string(buffer);
 }
 // 일기는 카이사르암호로 암호화 된다.
-string caesar(const string& plaintext, int key) {
+string Caesar(const string& plaintext, int key) {
     string encrypted = plaintext;
-    const string specialChars = "!@#$%^&*()";  //사용할 수 있는 특수문자
+    const string special_chars = "!@#$%^&*()";  //사용할 수 있는 특수문자
 
     for (char& c : encrypted) {
         if (isalpha(c)) {
@@ -36,36 +36,36 @@ string caesar(const string& plaintext, int key) {
         } else if (isdigit(c)) {
             c = static_cast<char>(((c - '0' + key) % 10) + '0');
         } else {
-            auto pos = specialChars.find(c); //find메소드는 검색 위치의 인덱스를 반환하고 검색이 실패하면 npos를 리턴
+            auto pos = special_chars.find(c); //find메소드는 검색 위치의 인덱스를 반환하고 검색이 실패하면 npos를 리턴
             if (pos != string::npos) {  //  string::npos 로 정의되는 상수
-                c = specialChars[(pos + key) % specialChars.size()]; 
+                c = special_chars[(pos + key) % special_chars.size()]; 
             }
         }
     }
     return encrypted;
 }
-bool fileExists(const string& fileName) { // 파일이 존재하는지 검색하는 함수
-    ifstream file(fileName);
-    return file.good(); //정상적으로 파일이 열리면 true를 반환...
+bool ExistsFile(const string& file_name) { // 파일이 존재하는지 검색하는 함수
+    ifstream file(file_name);
+    return file.good(); //정상적 으로 파일이 열리면 true를 반환...
 }
 
-void writediary(format * diaryFormat) {
-    string dateTime = getCurrentDateTime();
-    string fileName = "2024_diary/diary_" + getCurrentDate() + ".txt"; //일기 제목의 형식
+void WriteDiary(format * diary_format) {
+    string date_time = GetCurrentdate_time();
+    string file_name = "2024_diary/diary_" + GetCurrentDate() + ".txt"; //일기 제목의 형식
     int counter = 1;
-    while (fileExists(fileName)) {
-        fileName = "2024_diary/diary_" + getCurrentDate() + "_" + std::to_string(counter++) + ".txt";
+    while (ExistsFile(file_name)) {
+        file_name = "2024_diary/diary_" + GetCurrentDate() + "_" + std::to_string(counter++) + ".txt";
     }
-    ofstream diaryFile(fileName, ios::app);
+    ofstream diary_file(file_name, ios::app);
 
-    if (diaryFile.is_open()) {
-        diaryFile << "tags: " << diaryFormat -> tag << endl;
-        diaryFile << "-------------------------\n";
-        diaryFile << "Date & Time: " << dateTime << endl;
-        diaryFile << "Content: " << diaryFormat -> strContent << endl;
-        diaryFile << "-------------------------\n";
-        diaryFile.close();
-        cout << "Diary entry saved successfully to " << fileName << "!" << endl;
+    if (diary_file.is_open()) {
+        diary_file << "tags: " << diary_format -> tag << endl;
+        diary_file << "-------------------------\n";
+        diary_file << "Date & Time: " << date_time << endl;
+        diary_file << "Content: " << diary_format -> str_content << endl;
+        diary_file << "-------------------------\n";
+        diary_file.close();
+        cout << "Diary entry saved successfully to " << file_name << "!" << endl;
     } else {
         cerr << "Unable to open the diary file for writing." << endl;
     }

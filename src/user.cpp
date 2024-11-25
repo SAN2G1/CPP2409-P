@@ -1,14 +1,14 @@
 #include"user.h"
 
-bool My_diary::check_login(string inputPass){
-    if (my_password == inputPass) return true;
+bool MyDiary::check_login(string input_PW){
+    if (my_password == input_PW) return true;
     else return false;
 }
   
-int My_diary::get_key(){
+int MyDiary::get_key(){
     return my_key;
 }
 
-string My_diary::get_name(){
+string MyDiary::get_name(){
     return my_name;
 }

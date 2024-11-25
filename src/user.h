@@ -1,8 +1,9 @@
+#pragma once
 #include<iostream>
 #include<string>
 using namespace std;
 
-class My_diary
+class MyDiary
 {
     private :
     string my_password ;
@@ -10,12 +11,12 @@ class My_diary
     int my_key;
 
     public :
-    My_diary(string name = "None", string passwd = "0000", int key = 0){
+    MyDiary(string name = "None", string password = "0000", int key = 0){
         my_name = name;
-        my_password = passwd;
+        my_password = password;
         my_key = key ;
     }
-    bool check_login(string inputPass) ;
+    bool check_login(string input_PW) ;
     int get_key() ;
     string get_name();
 };
