@@ -85,6 +85,7 @@ int main()
             }
             else if (get_num == 3)
             {
+                EditDiary(save_directory + "diary_2024-11-17_1.txt");
             }
             else if (get_num == 4)
             {

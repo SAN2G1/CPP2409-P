@@ -4,6 +4,7 @@
 #include <ctime>
 #include <vector>
 #include <filesystem>
+#include <conio.h>
 #include "diary.h"
 using namespace std;
 namespace fs = std::filesystem;
@@ -99,10 +100,69 @@ vector<string> FileList()
     }
     return file_list;
 }
-//존재하는 file_name임을 가정
+// 존재하는 file_name임을 가정
 void RemoveDiary(string file_name)
 {
 
     fs::remove(file_name);
+}
+// 파일을 수정하는 함수 call 파일 내용을 수정하는 함수
+// 호출하기전 file_name의 유효성을 검사할 것.
+void EditDiary(string file_name)
+{
 
+    string new_txt = EditText(file_name);
+}
+
+// 파일 내용을 수정하는 함수
+string EditText(string file_name)
+{
+    ifstream file(file_name);
+    vector<string> lines;
+    string line = "";
+    // 일기 내용을 읽어와 저장
+    while (std::getline(file, line))
+    {
+        lines.push_back(line);
+    }
+    file.close();
+    line = lines[3].substr(lines[3].find(':') + 1); // ':'옆 공백 포함해서 자른다.
+    cout << "일기를 수정하세요! (Enetr을 누르면 종료!)" << endl;
+    cout << line ;
+    cout.flush();
+
+    unsigned char ch;
+    int cursor_point = line.size(); // 커서 끝을 문장 끝으로 설정.
+    while (true)
+    {
+        ch = _getch();
+        if (ch == '\r')
+            break;
+        else if (ch == 8)
+        { // 8은 backspace를 뜻한다.
+
+            // erase(size_type index = 0, size_type count = npos);
+            line.erase(cursor_point - 1, 1);
+            cursor_point--;
+        }
+        else if (ch == 224)
+        {                              // 화살표 키를 입력 받는다. 이때 필요인수는 2개다
+            ch = _getch(); // 추가 입력 처리
+            if (ch == 75 && cursor_point > 0)
+                cursor_point--;
+            else if (ch == 77 && cursor_point < line.size())
+                cursor_point++;
+        }
+        else
+        {
+            line.insert(line.begin() + cursor_point, ch); // iterator insert(iterator pos, char ch);
+            cursor_point++;
+        }
+        // cout << "\r";              // 커서를 줄 처음으로 이동
+        cout << string(line.size(), ' '); // 현재 줄 지우기
+        cout << "\r";                     // 다시 줄 처음으로 이동
+        cout << line;                     // 현재 상태 출력
+        cout.flush();
+    }
+    return line;
 }

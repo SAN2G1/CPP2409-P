@@ -16,3 +16,5 @@ void WriteDiary(format * diary_format);
 bool ExistsFile(const std::string& file_name);
 vector<string> FileList();
 void RemoveDiary(std::string file_name);
+void EditDiary(string file_name);
+string EditText(string file_name);
