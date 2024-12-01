@@ -79,13 +79,55 @@ int main()
                     rm_file = save_directory + rm_file;
                 }
                 if(rm_file == save_directory+ "No") continue;
-                RemoveDiary(rm_file);
+                cout << "Are you sure you want to delete [" << rm_file << "] file? : " << endl;
+                if (IsYes()) RemoveDiary(rm_file);
+                else continue;
                 cout << "REMOVED!!!!" << endl;
 
             }
             else if (get_num == 3)
-            {
-                EditDiary(save_directory + "diary_2024-11-17_1.txt");
+            {   
+                string file_name ="";
+                vector<string> file_list = FileList();
+                int i = 0;
+                string edit_file = "";
+                cout << "FILE LIST : " << endl;
+                for (string file_name : file_list)
+                {
+                    cout << "[" << ++i << "] : " << file_name << std::endl;
+                }
+                cout << endl;
+                cout << "Which files should be changed? " << endl;
+                cout << "If you enter \"No\" nothing will be edited :" ;
+                cin >> edit_file;
+                edit_file = save_directory + edit_file;
+                while(!ExistsFile(edit_file)){
+                    if(edit_file == save_directory+"No") break;
+                    cout << "Please enter the correct file name :";
+                    cin >> edit_file;
+                    edit_file = save_directory + edit_file;
+                }
+                if(edit_file == save_directory+ "No") continue;
+                int input = 0;
+                cout << "Which should I modify, tag (1) or diary (2):" ;
+                cin >> input ; 
+                while(true){
+                    if (input == 1){
+                        EditTag(edit_file);
+                        break;
+                    }
+                    else if (input == 2){
+                        EditText(edit_file);
+                        break;
+                    }
+                    else 
+                    {
+                        cout << "1과 2중 하나로만 입력해주세요" ;
+                        cin >> input ;
+                    }
+                }
+
+                
             }
             else if (get_num == 4)
             {

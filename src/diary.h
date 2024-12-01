@@ -11,10 +11,13 @@ typedef struct format {
 
 string GetCurrentDate();
 string GetCurrentDateTime();
-string Caesar(const string& plaintext, int key);
-void WriteDiary(format * diary_format);
-bool ExistsFile(const std::string& file_name);
+string Caesar(const string& , int);
+void WriteDiary(format *);
+bool ExistsFile(const string& );
 vector<string> FileList();
-void RemoveDiary(std::string file_name);
-void EditDiary(string file_name);
-string EditText(string file_name);
+void RemoveDiary(string);
+void SaveEdit(string , string, int);
+void EditText(string);
+string GetLine (string , int);
+string EditLine(string);
+void EditTag(string file_name);
