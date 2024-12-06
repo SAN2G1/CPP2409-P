@@ -1,8 +1,15 @@
 #include <iostream>
+#include <exception>
 #include "user.h"
 #include "diary.h"
 using namespace std;
-
+// 사용자 정의 예외 클래스
+class NullPointerException : public exception {
+public:
+    const char* what() const noexcept override {
+        return "File list is NULL";
+    }
+};
 void PrintMain();
 void PrintMenu();
 bool IsYes();
@@ -69,25 +76,29 @@ int main()
                 }
                 cout << endl;
                 cout << "Which files should be removed? " << endl;
-                cout << "If you enter \"No\" nothing will be removed :" ;
+                cout << "If you enter \"No\" nothing will be removed :";
                 cin >> rm_file;
                 rm_file = save_directory + rm_file;
-                while(!ExistsFile(rm_file)){
-                    if(rm_file == save_directory+"No") break;
+                while (!ExistsFile(rm_file))
+                {
+                    if (rm_file == save_directory + "No")
+                        break;
                     cout << "Please enter the correct file name :";
                     cin >> rm_file;
                     rm_file = save_directory + rm_file;
                 }
-                if(rm_file == save_directory+ "No") continue;
+                if (rm_file == save_directory + "No")
+                    continue;
                 cout << "Are you sure you want to delete [" << rm_file << "] file? : " << endl;
-                if (IsYes()) RemoveDiary(rm_file);
-                else continue;
+                if (IsYes())
+                    RemoveDiary(rm_file);
+                else
+                    continue;
                 cout << "REMOVED!!!!" << endl;
-
             }
             else if (get_num == 3)
-            {   
-                string file_name ="";
+            {
+                string file_name = "";
                 vector<string> file_list = FileList();
                 int i = 0;
                 string edit_file = "";
@@ -98,39 +109,57 @@ int main()
                 }
                 cout << endl;
                 cout << "Which files should be changed? " << endl;
-                cout << "If you enter \"No\" nothing will be edited :" ;
+                cout << "If you enter \"No\" nothing will be edited :";
                 cin >> edit_file;
                 edit_file = save_directory + edit_file;
-                while(!ExistsFile(edit_file)){
-                    if(edit_file == save_directory+"No") break;
+                while (!ExistsFile(edit_file))
+                {
+                    if (edit_file == save_directory + "No")
+                        break;
                     cout << "Please enter the correct file name :";
                     cin >> edit_file;
                     edit_file = save_directory + edit_file;
                 }
-                if(edit_file == save_directory+ "No") continue;
+                if (edit_file == save_directory + "No")
+                    continue;
                 int input = 0;
-                cout << "Which should I modify, tag (1) or diary (2):" ;
-                cin >> input ; 
-                while(true){
-                    if (input == 1){
+                cout << "Which should I modify, tag (1) or diary (2):";
+                cin >> input;
+                while (true)
+                {
+                    if (input == 1)
+                    {
                         EditTag(edit_file);
                         break;
                     }
-                    else if (input == 2){
+                    else if (input == 2)
+                    {
                         EditText(edit_file);
                         break;
                     }
-                    else 
+                    else
                     {
-                        cout << "1과 2중 하나로만 입력해주세요" ;
-                        cin >> input ;
+                        cout << "1과 2중 하나로만 입력해주세요";
+                        cin >> input;
                     }
                 }
-
-                
             }
             else if (get_num == 4)
             {
+                cout << "Searching" << endl;
+                try
+                {
+                    bsTree *root = GetSearchTree();
+                    // 폴더에 일기가 없으면 예외를 던진다.
+                    if(root == nullptr) throw NullPointerException(); 
+                    cout<<"complete"<<endl;
+                }
+                catch(const NullPointerException& e){
+                    cout << "empty file list : "<< e.what()<<endl;
+                    continue;
+                }
+
+    
             }
             else if (get_num == 5)
             {

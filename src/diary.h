@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "bst.h"
 using namespace std;
 extern const string save_directory; 
 typedef struct format {
@@ -21,3 +22,5 @@ void EditText(string);
 string GetLine (string , int);
 string EditLine(string);
 void EditTag(string file_name);
+
+bsTree* GetSearchTree();

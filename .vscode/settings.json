@@ -6,7 +6,8 @@
         "filesystem": "cpp",
         "vector": "cpp",
         "fstream": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "xutility": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

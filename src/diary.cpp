@@ -5,6 +5,7 @@
 #include <vector>
 #include <filesystem>
 #include <conio.h>
+#include <cstdio>
 #include "diary.h"
 using namespace std;
 
@@ -109,14 +110,16 @@ void RemoveDiary(string file_name)
 }
 //  수정된 파일을 저장하는 함수
 // 0 -> 태그 , 2-> 날짜 , 3-> 내용
-void SaveEdit(string file_name, string edit_line, int idx) {
+void SaveEdit(string file_name, string edit_line, int idx)
+{
     // 파일 읽기
     ifstream file(file_name);
     vector<string> lines;
     string line = "";
 
     // 파일 내용을 벡터에 저장
-    while (getline(file, line)) {
+    while (getline(file, line))
+    {
         lines.push_back(line);
     }
     file.close();
@@ -127,7 +130,8 @@ void SaveEdit(string file_name, string edit_line, int idx) {
 
     // 파일 쓰기
     ofstream out_file(file_name, ios::out);
-    for (const string& line : lines) {
+    for (const string &line : lines)
+    {
         out_file << line << endl;
     }
     out_file.close();
@@ -157,7 +161,7 @@ void EditText(string file_name)
     line = GetLine(file_name, 3); // 일기 내용
     cout << "일기를 수정하세요! (Enetr을 누르면 종료!)" << endl;
     line = EditLine(line);
-    SaveEdit(file_name, line, 3) ;
+    SaveEdit(file_name, line, 3);
     cout << "completed" << endl;
 }
 // 태그를 수정하는 함수
@@ -209,4 +213,23 @@ string EditLine(string line)
         cout.flush();
     }
     return line;
+}
+
+bsTree* GetSearchTree()
+{
+    bsTree *root = nullptr;
+    vector<string> lists = FileList();
+    vector< fdata> list_data ;
+    for (string list : lists)
+    {   
+        fdata fdata;
+        fdata.file_name=list;
+        sscanf(list.c_str(), "diary_%d-%d-%d", &fdata.year, &fdata.month, &fdata.day);
+        list_data.push_back(fdata);
+    }
+
+    for(fdata fdata: list_data){
+        root = insert(fdata, root);
+    }
+    return root;
 }
