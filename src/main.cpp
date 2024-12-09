@@ -158,8 +158,14 @@ int main()
                     cout << "empty file list : "<< e.what()<<endl;
                     continue;
                 }
+                string choice;
+                cout<< "day or tag : " ;
+                cin >> choice;
+                if (choice == "day"){
 
-    
+                }
+                else if (choice == "tag"){}
+                else cout << "Invalid input." <<endl;
             }
             else if (get_num == 5)
             {

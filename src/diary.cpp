@@ -229,7 +229,7 @@ bsTree* GetSearchTree()
     }
 
     for(fdata fdata: list_data){
-        root = insert(fdata, root);
+        root = Insert(fdata, root);
     }
     return root;
 }

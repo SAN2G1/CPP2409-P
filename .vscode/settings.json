@@ -7,7 +7,9 @@
         "vector": "cpp",
         "fstream": "cpp",
         "iosfwd": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "chrono": "cpp",
+        "algorithm": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
