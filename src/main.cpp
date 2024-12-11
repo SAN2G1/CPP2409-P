@@ -1,13 +1,25 @@
 #include <iostream>
 #include <exception>
+#include <limits> // numeric_limits가 정의된 헤더
+
 #include "user.h"
 #include "diary.h"
 using namespace std;
 // 사용자 정의 예외 클래스
-class NullPointerException : public exception {
+class NullPointerException : public exception
+{
 public:
-    const char* what() const noexcept override {
+    const char *what() const noexcept override
+    {
         return "File list is NULL";
+    }
+};
+class OutOfOption : public exception
+{
+public:
+    const char *what() const noexcept override
+    {
+        return "It's out of range";
     }
 };
 void PrintMain();
@@ -41,9 +53,12 @@ int main()
         PrintMenu(); // menu를 프린트한다.
         cout << "HELLO " << admin.get_name() << ". Have a nice day." << endl;
         cout << "Select Number >> ";
-        cin >> get_num;
-        if (get_num > 0 && get_num < 6)
+        try
         {
+            cin >> get_num;
+            if (cin.fail())
+                throw OutOfOption();
+
             if (get_num == 1)
             { // write
                 format this_diary = {"", ""};
@@ -147,25 +162,24 @@ int main()
             else if (get_num == 4)
             {
                 cout << "Searching" << endl;
-                try
-                {
-                    bsTree *root = GetSearchTree();
-                    // 폴더에 일기가 없으면 예외를 던진다.
-                    if(root == nullptr) throw NullPointerException(); 
-                    cout<<"complete"<<endl;
-                }
-                catch(const NullPointerException& e){
-                    cout << "empty file list : "<< e.what()<<endl;
-                    continue;
-                }
-                string choice;
-                cout<< "day or tag : " ;
-                cin >> choice;
-                if (choice == "day"){
 
+                bsTree *root = GetSearchTree();
+                // 폴더에 일기가 없으면 예외를 던진다.
+                if (root == nullptr)
+                    throw NullPointerException();
+                cout << "complete" << endl;
+
+                string choice;
+                cout << "day or tag : ";
+                cin >> choice;
+                if (choice == "day")
+                {
                 }
-                else if (choice == "tag"){}
-                else cout << "Invalid input." <<endl;
+                else if (choice == "tag")
+                {
+                }
+                else
+                    cout << "Invalid input." << endl;
             }
             else if (get_num == 5)
             {
@@ -176,13 +190,25 @@ int main()
             }
             else
             {
-                cout << "indexErr";
-                return 0;
+                throw OutOfOption();
             }
         }
-        else
-            cout << "Please input (1~5)" << endl;
+        catch (const NullPointerException &e)
+        {
+            cout << "empty file list : " << e.what() << endl;
+            continue;
+        }
+        catch (const OutOfOption &e)
+        {
+            cout << "Not in the options : " << e.what() << endl;
+            cin.clear();                                         // 스트림 상태 플래그 초기화
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 잘못된 입력 비우기
+            continue;                                            // 메뉴 다시 출력
+        }
+        
     }
+    // 입력 버퍼 초기화
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     return 0;
 }
