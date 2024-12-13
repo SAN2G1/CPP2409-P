@@ -8,9 +8,9 @@
 #include <cstdio>
 #include "diary.h"
 using namespace std;
-
 namespace fs = std::filesystem;
 const string save_directory = "2024_diary\\";
+
 string GetCurrentDate()
 { // 날짜만
     time_t now = time(0);
@@ -35,30 +35,36 @@ string GetCurrentdate_time()
 string Caesar(const string &plaintext, int key)
 {
     string encrypted = plaintext;
+
     const string special_chars = "!@#$%^&*()"; // 사용할 수 있는 특수문자
+
+    // 알파벳과 숫자의 키를 양수로 변환
+    int alpha_key = (key % 26 + 26) % 26; // 알파벳용
+    int digit_key = (key % 10 + 10) % 10; // 숫자용
 
     for (char &c : encrypted)
     {
         if (isalpha(c))
         {
             char base = islower(c) ? 'a' : 'A';
-            c = static_cast<char>((c - base + key) % 26 + base); // cpp style 명시적 형변환
+            c = static_cast<char>((c - base + alpha_key) % 26 + base);
         }
         else if (isdigit(c))
         {
-            c = static_cast<char>(((c - '0' + key) % 10) + '0');
+            c = static_cast<char>(((c - '0' + digit_key) % 10) + '0');
         }
         else
         {
-            auto pos = special_chars.find(c); // find메소드는 검색 위치의 인덱스를 반환하고 검색이 실패하면 npos를 리턴
+            auto pos = special_chars.find(c);
             if (pos != string::npos)
-            { //  string::npos 로 정의되는 상수
+            {
                 c = special_chars[(pos + key) % special_chars.size()];
             }
         }
     }
     return encrypted;
 }
+
 bool ExistsFile(const string &file_name)
 {
     return fs::exists(file_name); //(변경) 파일이 존재하면 true, 아니면 false
@@ -143,6 +149,11 @@ string GetLine(string file_name, int idx)
     ifstream file(file_name);
     vector<string> lines;
     string line = "";
+    if (!file.is_open())
+    {
+        cerr << "Error: Unable to open file " << file_name << endl;
+        return ""; // 빈 문자열 반환
+    }
     // 일기 내용을 읽어와 저장
     while (std::getline(file, line))
     {
@@ -215,21 +226,65 @@ string EditLine(string line)
     return line;
 }
 
-bsTree* GetSearchTree()
+bsTree *GetSearchTree()
 {
     bsTree *root = nullptr;
     vector<string> lists = FileList();
-    vector< fdata> list_data ;
+    vector<fdata> list_data;
     for (string list : lists)
-    {   
+    {
         fdata fdata;
-        fdata.file_name=list;
+        fdata.file_name = list;
         sscanf(list.c_str(), "diary_%d-%d-%d", &fdata.year, &fdata.month, &fdata.day);
         list_data.push_back(fdata);
     }
 
-    for(fdata fdata: list_data){
+    for (fdata fdata : list_data)
+    {
         root = Insert(fdata, root);
     }
     return root;
+}
+vector<string> SplitBySpace(const string &list_strings)
+{
+    vector<string> results;
+    istringstream stream(list_strings);
+    string word;
+    while (stream >> word)
+    {
+        results.push_back(word);
+    }
+    return results;
+}
+
+map<string, vector<string>> BuildTagFileMap()
+{
+    map<string, vector<string>> tag_file_map;
+
+    for (auto file : FileList())
+    {
+        file = save_directory + file;
+        cout << file << endl;
+        if (ExistsFile(file))
+        {
+            vector<string> tags = SplitBySpace(GetLine(file, 0));
+            for (string tag : tags)
+            {
+                tag_file_map[tag].push_back(file);
+            }
+        }
+    }
+    return tag_file_map;
+}
+void PrintAllTags(const map<string, vector<string>> &tag_file_map)
+{
+    cout << "All tags and associated files:" << endl;
+    for (const auto &[tag, files] : tag_file_map)
+    {
+        cout << "Tag: " << tag << endl;
+        for (const string &file : files)
+        {
+            cout << " - " << file << endl;
+        }
+    }
 }

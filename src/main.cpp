@@ -25,7 +25,8 @@ public:
 void PrintMain();
 void PrintMenu();
 bool IsYes();
-
+void DateInputHandler(bsTree *);
+void PrintResult(const vector<string> &);
 int main()
 {
     MyDiary admin("admin", "1234", 4);
@@ -174,14 +175,61 @@ int main()
                 cin >> choice;
                 if (choice == "day")
                 {
+                    DateInputHandler(root);
                 }
                 else if (choice == "tag")
                 {
+                    PrintAllTags(BuildTagFileMap());
                 }
                 else
                     cout << "Invalid input." << endl;
+                if (root != nullptr)
+                {
+                    DeleteTree(root);
+                    root = nullptr;
+                }
             }
             else if (get_num == 5)
+            {
+                string select;
+                string file_name;
+                cout << "Encryption OR Decryption FILE!!!" << endl;
+                cout << "Please input \"enc\" or \"dec\" >> ";
+                cin >> select;
+                if (select == "enc")
+                {
+                    cout << "Input file name : ";
+                    cin >> file_name;
+                    file_name = save_directory + file_name;
+                    if (!ExistsFile(file_name))
+                    {
+                        cout << file_name << " does not exist" << endl;
+                        continue;
+                    }
+                    string context = GetLine(file_name, 3);
+                    string enc_text = Caesar(context, admin.get_key());
+                    SaveEdit(file_name, enc_text, 3);
+                    cout << "it's completed" << endl;
+                }
+                else if (select == "dec")
+                {
+                    cout << "Input file name : ";
+                    cin >> file_name;
+                    file_name = save_directory + file_name;
+                    if (!ExistsFile(file_name))
+                    {
+                        cout << file_name << " does not exist" << endl;
+                        continue;
+                    }
+                    string enc_text = GetLine(file_name, 3);
+                    string dec_text = Caesar(enc_text, -(admin.get_key()));
+                    SaveEdit(file_name, dec_text, 3);
+                    cout << "it's completed" << endl;
+                }
+                else
+                    throw OutOfOption();
+            }
+            else if (get_num == 6)
             {
                 PrintMain();
                 cout << "END END END END END";
@@ -205,12 +253,57 @@ int main()
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 잘못된 입력 비우기
             continue;                                            // 메뉴 다시 출력
         }
-        
     }
     // 입력 버퍼 초기화
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     return 0;
+}
+void DateInputHandler(bsTree *root)
+{
+    int year = -1, month = -1, day = -1;
+
+    cout << "Enter year: ";
+    cin >> year;
+
+    cout << "Enter month (or -1 to skip): ";
+    cin >> month;
+
+    cout << "Enter day (or -1 to skip): ";
+    cin >> day;
+    vector<string> result;
+    // 입력값에 따라 함수 호출
+    if (month == -1)
+    {
+        result = Search(year, root); // 년도만 입력
+        PrintResult(result);
+    }
+    else if (day == -1)
+    {
+        result = Search(year, month, root); // 년도와 월 입력
+        PrintResult(result);
+    }
+    else
+    {
+        result = Search(year, month, day, root); // 년도, 월, 일 모두 입력
+        PrintResult(result);
+    }
+}
+// 결과를 출력하는 함수(스트링 벡터)
+void PrintResult(const vector<string> &results)
+{
+    if (results.empty())
+    {
+        cout << "No results found." << endl;
+    }
+    else
+    {
+        cout << "Results:" << endl;
+        for (const string &result : results)
+        {
+            cout << result << endl;
+        }
+    }
 }
 
 void PrintMain()
@@ -232,7 +325,8 @@ void PrintMenu()
     cout << "2. Delete a diary" << endl;
     cout << "3. Edit a diary" << endl;
     cout << "4. Search a diary" << endl;
-    cout << "5. Exit" << endl;
+    cout << "5. Encryption OR Decryption" << endl;
+    cout << "6. Exit" << endl;
     cout << "---------------------------------------------------------------------------------------------------" << endl;
 }
 

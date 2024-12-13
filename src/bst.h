@@ -23,9 +23,9 @@ typedef struct bsTree
 
 bsTree *Insert(fdata, bsTree *);
 bsTree *MakeNode(fdata);
-string Search(int, int, int, bsTree *);
+vector<string> Search(int, int, int, bsTree *);
 vector<string> Search(int , int, bsTree *node);
 vector<string> Search(int , bsTree *);
 
 
-// bsTree *deleteNode(); file내의 문서 검색 목적 트리. 구현 x
+void DeleteTree(bsTree*); //할당을 해제하는 함수

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 #include "bst.h"
 using namespace std;
 extern const string save_directory; 
@@ -21,6 +22,9 @@ void SaveEdit(string , string, int);
 void EditText(string);
 string GetLine (string , int);
 string EditLine(string);
-void EditTag(string file_name);
+void EditTag(string );
 
 bsTree* GetSearchTree();
+vector<string> SplitBySpace(const string &);
+map<string, vector<string>> BuildTagFileMap();
+void PrintAllTags(const map<string, vector<string>>&);

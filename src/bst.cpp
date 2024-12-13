@@ -41,18 +41,23 @@ bsTree *MakeNode(fdata fdata)
     return tmp;
 }
 //함수 오버로딩
-string Search(int year, int month, int day, bsTree *node)
+vector<string> Search(int year, int month, int day, bsTree *node)
 {
+    vector<string> results;
     if (node == nullptr)
-        return ""; // 노드가 없으면 빈 문자열 반환
+        return results; // 노드가 없으면 빈 문자열 반환
     if (node->file_data.year == year && node->file_data.month == month && node->file_data.day == day)
-        return node->file_data.file_name;
+        results.push_back(node->file_data.file_name);
 
-    fdata target{"", year, month, day};
-    if (target < node->file_data)
-        return Search(year, month, day, node->left);
-    else
-        return Search(year, month, day, node->right);
+      // 왼쪽 서브트리와 오른쪽 서브트리를 탐색하여 결과를 병합
+    vector<string> leftResults = Search(year, month, node->left);
+    vector<string> rightResults = Search(year, month, node->right);
+
+    // 왼쪽과 오른쪽 결과 병합
+    results.insert(results.end(), leftResults.begin(), leftResults.end());
+    results.insert(results.end(), rightResults.begin(), rightResults.end());
+
+    return results;
 }
 
 vector<string> Search(int year, int month, bsTree *node)
@@ -98,4 +103,12 @@ vector<string> Search(int year, bsTree *node)
     results.insert(results.end(), rightResults.begin(), rightResults.end());
 
     return results;
+}
+
+void DeleteTree(bsTree* node){
+    if (node == nullptr)
+        return;
+    DeleteTree(node->left);
+    DeleteTree(node->right);
+    delete node;
 }
