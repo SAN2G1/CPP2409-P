@@ -171,9 +171,9 @@ int main()
                 cout << "complete" << endl;
 
                 string choice;
-                cout << "day or tag : ";
+                cout << "date or tag : ";
                 cin >> choice;
-                if (choice == "day")
+                if (choice == "date")
                 {
                     DateInputHandler(root);
                 }

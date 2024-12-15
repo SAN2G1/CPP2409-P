@@ -264,7 +264,7 @@ map<string, vector<string>> BuildTagFileMap()
     for (auto file : FileList())
     {
         file = save_directory + file;
-        cout << file << endl;
+    
         if (ExistsFile(file))
         {
             vector<string> tags = SplitBySpace(GetLine(file, 0));

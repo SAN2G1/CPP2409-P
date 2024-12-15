@@ -50,8 +50,8 @@ vector<string> Search(int year, int month, int day, bsTree *node)
         results.push_back(node->file_data.file_name);
 
       // 왼쪽 서브트리와 오른쪽 서브트리를 탐색하여 결과를 병합
-    vector<string> leftResults = Search(year, month, node->left);
-    vector<string> rightResults = Search(year, month, node->right);
+    vector<string> leftResults = Search(year, month, day,node->left);
+    vector<string> rightResults = Search(year, month, day, node->right);
 
     // 왼쪽과 오른쪽 결과 병합
     results.insert(results.end(), leftResults.begin(), leftResults.end());
@@ -91,7 +91,6 @@ vector<string> Search(int year, bsTree *node)
     if (node->file_data.year == year )
         results.push_back(node->file_data.file_name);
 
-// 왼쪽과 오른쪽 서브트리를 탐색. 
 // template <class InputIterator>iterator insert (const_iterator position, InputIterator first, InputIterator last);
 
    // 왼쪽 서브트리와 오른쪽 서브트리를 탐색하여 결과를 병합
